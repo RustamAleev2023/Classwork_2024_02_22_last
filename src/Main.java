@@ -5,9 +5,9 @@ public class Main {
 //        task1();
 //        task2();
 //        task3();
-        task4();
+//        task4();
 //        task5();
-//        task6();
+        task6();
 //        task7();
 
     }
@@ -94,7 +94,7 @@ public class Main {
     //Task4
     //Напишите итератор по двумерному массиву.
     public static void task4(){
-        Integer[][] array = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+        Integer[][] array = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9, 10}};
         Array2dIter<Integer> iter = new Array2dIter<>(array);
 
         while (iter.hasNext()){
@@ -136,26 +136,115 @@ public class Main {
     public static void task5() {
 
     }
+    static class DeepIterator implements Iterator<String> {
+        private Stack<Iterator> iterators;
+        private String next;
+        private boolean hasNext;
+
+        public DeepIterator(Iterator<?> iterator) {
+            this.iterators = new Stack<Iterator>();
+            iterators.push(iterator);
+
+            updateNext();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return hasNext;
+        }
+
+        private void updateNext(){
+
+            if(iterators.empty()){
+                next = null;
+                hasNext = false;
+                return;
+            }
+
+            Iterator current = iterators.peek();
+
+            if (current.hasNext()) {
+                Object o = current.next();
+                if (o instanceof String) {
+                    next = (String) o;
+                    hasNext = true;
+                } else if (o instanceof Iterator) {
+                    Iterator iterator = (Iterator) o;
+                    iterators.push(iterator);
+                    updateNext();
+                } else {
+                    throw new IllegalArgumentException();
+                }
+            } else {
+                iterators.pop();
+                updateNext();
+            }
+        }
+
+        @Override
+        public String next() throws NoSuchElementException {
+
+            if(!hasNext){
+                throw new NoSuchElementException();
+            }
+
+            String nextToReturn = next;
+            updateNext();
+            return nextToReturn;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+    }
 
     //Task6
     //Напишите итератор, который проходит по двум итератором.
     public static void task6(){
-        ArrayList list1 = new ArrayList<>();
+        ArrayList<Integer> list1 = new ArrayList<>();
         int[] numbers1 = new int[]{2,4,6,8};
         for (int i = 0; i < numbers1.length; i++) {
             list1.add(numbers1[i]);
         }
-        ArrayList list2 = new ArrayList<>();
+        ArrayList<Integer> list2 = new ArrayList<>();
         int[] numbers2 = new int[]{1,3,5,7,9};
         for (int i = 0; i < numbers2.length; i++) {
             list2.add(numbers2[i]);
         }
-        Iterator iterator1 = list1.iterator();
-        Iterator iterator2 = list2.iterator();
 
-        while (iterator1.hasNext() && iterator2.hasNext()) {
-            System.out.println(iterator2.next());
-            System.out.println(iterator1.next());
+        Iterator<Integer> iterator1 = list2.iterator();
+        Iterator<Integer> iterator2 = list1.iterator();
+
+        MyIterator<Integer> iterator = new MyIterator<>(iterator1, iterator2);
+        while (iterator.hasNext()){
+            System.out.println(iterator.next());
+        }
+    }
+    public static class MyIterator<T> implements Iterator<T> {
+        private Iterator<T> iterator1;
+        private Iterator<T> iterator2;
+
+        public MyIterator (Iterator<T> iterator1, Iterator<T> iterator2) {
+            this.iterator1 = iterator1;
+            this.iterator2 = iterator2;
+        }
+
+        @Override
+        public boolean hasNext() {
+            while (iterator1.hasNext()) return true;
+            while (iterator2.hasNext()) return true;
+            return false;
+        }
+
+        @Override
+        public T next() {
+            if(!hasNext())
+                throw new NoSuchElementException();
+
+            while (iterator1.hasNext()) return iterator1.next();
+            while (iterator2.hasNext()) return iterator2.next();
+            return null;
         }
     }
 
