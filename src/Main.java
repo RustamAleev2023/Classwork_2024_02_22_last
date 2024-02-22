@@ -6,8 +6,8 @@ public class Main {
 //        task2();
 //        task3();
 //        task4();
-//        task5();
-        task6();
+        task5();
+//        task6();
 //        task7();
 
     }
@@ -134,15 +134,44 @@ public class Main {
     //Напишите поверх этого итератора другой, уже «плоский».
     //однорешение рекурсиное второе на стеках
     public static void task5() {
+//        List<Object> list1 = new ArrayList<>();
+//        list1.add("hello");
+//        list1.add("world");
+//        List<Object> list2 = new ArrayList<>();
+//        list2.add(123);
+//        list2.add(456);
+//        List<Object> list3 = new ArrayList<>();
+//        list3.add("Java");
+//        list3.add("coding");
+//        List<Object> mainList = new ArrayList<>();
+//        mainList.add(list1.iterator());
+//        mainList.add(list2.iterator());
+//        mainList.add(list3.iterator());
+//        DeepIterator iterator = new DeepIterator(mainList.iterator());
+//        while (iterator.hasNext()){
+//            System.out.println(iterator.next);
+//        }
+
+        List<Object> list = new ArrayList<>();
+        list.add("Hello");
+        list.add(Arrays.asList("World", "!", Arrays.asList("Welcome", "to", "Java")));
+//        list.add("world");
+
+        Iterator<String> iterator = new DeepIterator(list.iterator());
+
+        while (iterator.hasNext()) {
+            String element = iterator.next();
+            System.out.println(element);
+        }
 
     }
     static class DeepIterator implements Iterator<String> {
-        private Stack<Iterator> iterators;
+        private Stack<Iterator<?>> iterators;
         private String next;
         private boolean hasNext;
 
         public DeepIterator(Iterator<?> iterator) {
-            this.iterators = new Stack<Iterator>();
+            this.iterators = new Stack<Iterator<?>>();
             iterators.push(iterator);
 
             updateNext();
@@ -182,7 +211,7 @@ public class Main {
         }
 
         @Override
-        public String next() throws NoSuchElementException {
+        public String next(){
 
             if(!hasNext){
                 throw new NoSuchElementException();
