@@ -99,6 +99,7 @@ public class Main {
         }
     }
 
+
     //Task4
     //Напишите итератор по двумерному массиву.
     public static void task4(){
