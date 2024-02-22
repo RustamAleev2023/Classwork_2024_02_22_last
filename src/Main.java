@@ -5,10 +5,10 @@ public class Main {
 //        task1();
 //        task2();
 //        task3();
-//        task4();
+        task4();
 //        task5();
 //        task6();
-        task7();
+//        task7();
 
     }
 
@@ -64,14 +64,6 @@ public class Main {
     //Написать итератор по массиву
     public static void task3(){
         Integer[] array = {1, 2, 3, 4, 5};
-//        ArrayList numbers = new ArrayList<>();
-//        for (int i = 0; i < array.length; i++) {
-//            numbers.add(array[i]);
-//        }
-//        Iterator iterator = numbers.iterator();
-//        while (iterator.hasNext()){
-//            System.out.println(iterator.next());
-//        }
         ArrayIterator<Integer> iterator = new ArrayIterator<Integer>(array);
         while (iterator.hasNext()){
             System.out.println(iterator.next());
@@ -103,14 +95,6 @@ public class Main {
     //Напишите итератор по двумерному массиву.
     public static void task4(){
         Integer[][] array = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
-//        ArrayList numbers = new ArrayList<>();
-//        for (int i = 0; i < array.length; i++) {
-//            for (int j = 0; j < array[i].length; j++) {
-//                numbers.add(array[i][j]);
-//            }
-//
-//        }
-//        Iterator iterator = numbers.iterator();
         Array2dIter<Integer> iter = new Array2dIter<>(array);
 
         while (iter.hasNext()){
@@ -128,15 +112,19 @@ public class Main {
 
         @Override
         public boolean hasNext() {
-            return row < array.length && col < array[0].length;
+            while (row < array.length && array[row].length == col) {
+                row++;
+                col = 0;
+            }
+            return row < array.length;
         }
 
         @Override
         public T next() {
-            if(!hasNext()){
+            if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-            return array[row++][col++];
+            return array[row][col++];
         }
     }
 
